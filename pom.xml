@@ -110,6 +110,13 @@
                 <version>3.8.1</version>
             </plugin>
 
+            <!-- Spring Boot Maven Plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+
             <!-- Plugin Maven Surefire -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
