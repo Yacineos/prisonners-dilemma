@@ -1,10 +1,10 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 
-public class Pavlov implements Strategy{
+public class Pavlov extends Strategy{
     @Override
     public Action play(Game game, PlayerNumber opponent) {
         if(isOpponentHistoryEmpty(game)){
@@ -33,7 +33,9 @@ public class Pavlov implements Strategy{
     }
 
     private Action getStrategyLastAction(Game game, PlayerNumber opponent){
-        return game.getTurnThatJustEnded().getActionByPlayerNumber(getStrategyPlayerNumber(opponent));
+        Choice choice = game.getTurnThatJustEnded().getChoiceByPlayerNumber(getStrategyPlayerNumber(opponent));
+        Action res = Utils.convertChoiceToAction(choice);
+        return res;
     }
 
 }

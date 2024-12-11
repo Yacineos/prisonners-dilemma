@@ -1,12 +1,12 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 
 import java.util.Random;
 
-public class PavlovRandom implements Strategy{
+public class PavlovRandom extends Strategy{
 
     private final Random random;
 
@@ -46,7 +46,9 @@ public class PavlovRandom implements Strategy{
     }
 
     private Action getStrategyLastAction(Game game, PlayerNumber opponent){
-        return game.getTurnThatJustEnded().getActionByPlayerNumber(getStrategyPlayerNumber(opponent));
+        Choice choice = game.getTurnThatJustEnded().getChoiceByPlayerNumber(getStrategyPlayerNumber(opponent));
+        Action res = Utils.convertChoiceToAction(choice);
+        return res;
     }
     private boolean isNextActionRandom() {
         int randomInt = random.nextInt(2);

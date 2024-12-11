@@ -1,8 +1,7 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.RandomStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +39,7 @@ class RandomTest {
         when(mockRandom.nextInt(2)).thenReturn(1);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "Random strategy should return COOPERATE when random is 1.");
+        assertEquals(Choice.COOPERATE, action, "Random strategy should return COOPERATE when random is 1.");
     }
 
     @Test
@@ -48,20 +47,20 @@ class RandomTest {
         when(mockRandom.nextInt(2)).thenReturn(0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "Random strategy should return BETRAY when random is 0.");
+        assertEquals(Choice.BETRAY, action, "Random strategy should return BETRAY when random is 0.");
     }
 
     @Test
      void testPlayWithNonEmptyOpponentHistory() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.BETRAY, opponent);
 
         when(mockRandom.nextInt(2)).thenReturn(1);
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "Random strategy should return COOPERATE when random is 1, regardless of opponent history.");
+        assertEquals(Choice.COOPERATE, action, "Random strategy should return COOPERATE when random is 1, regardless of opponent history.");
 
         when(mockRandom.nextInt(2)).thenReturn(0);
         action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "Random strategy should return BETRAY when random is 0, regardless of opponent history.");
+        assertEquals(Choice.BETRAY, action, "Random strategy should return BETRAY when random is 0, regardless of opponent history.");
     }
 }

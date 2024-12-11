@@ -1,7 +1,8 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
+import contract.Choice;
+import contract.Game;
+import contract.PlayerNumber;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.Adaptive;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ class AdaptiveTest {
         for (int turn = 0; turn < 6; turn++) {
             when(game.getCurrentTurn()).thenReturn(turn);
             Action action = strategy.play(game, opponent);
-            assertEquals(Action.COOPERATE, action, "Adaptive should cooperate during the initial sequence (turn " + turn + ").");
+            assertEquals(Choice.COOPERATE, action, "Adaptive should cooperate during the initial sequence (turn " + turn + ").");
         }
     }
 
@@ -42,17 +43,25 @@ class AdaptiveTest {
 
     @Test
      void testActionBasedOnBestMean_CooperatePreferred() {
-        for(int i = 0; i < 6; i++){
-            game.playTurn(Action.COOPERATE,opponent);
-            game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        }
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
         for(int i = 0; i < 4; i++){
-            game.playTurn(Action.BETRAY,opponent);
-            game.playTurn(Action.BETRAY, PlayerNumber.PLAYER_TWO);
+            game.playTurn(Choice.BETRAY,opponent);
+            game.playTurn(Choice.BETRAY, PlayerNumber.PLAYER_TWO);
         }
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "Adaptive should prefer cooperation if it has a better mean score.");
+        assertEquals(Choice.COOPERATE, action, "Adaptive should prefer cooperation if it has a better mean score.");
     }
 
     @Test
@@ -73,7 +82,7 @@ class AdaptiveTest {
         when(game.getCurrentTurn()).thenReturn(5);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "Adaptive should cooperate if the current turn is within the initial sequence.");
+        assertEquals(Choice.COOPERATE, action, "Adaptive should cooperate if the current turn is within the initial sequence.");
     }
 
 

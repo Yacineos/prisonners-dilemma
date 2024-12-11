@@ -1,8 +1,7 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.PollsterRandomBetray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,37 +35,37 @@ class PollsterRandomBetrayTest {
     @Test
      void testPlayWithEmptyHistory() {
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "PollsterRandomBetray should cooperate if the opponent's history is empty.");
+        assertEquals(Choice.COOPERATE, action, "PollsterRandomBetray should cooperate if the opponent's history is empty.");
     }
 
     @Test
      void testPlayWithRandomBetray() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
         when(mockRandom.nextInt(2)).thenReturn(1);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "PollsterRandomBetray should betray when isNextActionBetray is true.");
+        assertEquals(Choice.BETRAY, action, "PollsterRandomBetray should betray when isNextActionBetray is true.");
     }
 
     @Test
      void testPlayWithTitForTatBehavior() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
         when(mockRandom.nextInt(2)).thenReturn(0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "PollsterRandomBetray should mimic the last action if isNextActionBetray is false.");
+        assertEquals(Choice.BETRAY, action, "PollsterRandomBetray should mimic the last action if isNextActionBetray is false.");
     }
 
     @Test
      void testPlayWithOpponentCooperateAndRandomCooperate() {
-        game.playTurn(Action.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, opponent);
 
         when(mockRandom.nextInt(2)).thenReturn(0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "PollsterRandomBetray should mimic the opponent's last action when isNextActionBetray is false.");
+        assertEquals(Choice.COOPERATE, action, "PollsterRandomBetray should mimic the opponent's last action when isNextActionBetray is false.");
     }
 }

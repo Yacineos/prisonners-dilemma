@@ -1,8 +1,7 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.AlwaysCooperate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,24 +31,24 @@ class AlwaysCooperateTest {
     @Test
      void testPlayWithEmptyOpponentHistory() {
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "AlwaysBetray should always return BETRAY, even with empty opponent history.");
+        assertEquals(Choice.COOPERATE, action, "AlwaysBetray should always return BETRAY, even with empty opponent history.");
     }
 
     @Test
      void testPlayWithSingleActionInOpponentHistory() {
-        game.playTurn(Action.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, opponent);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "AlwaysBetray should always return BETRAY, regardless of opponent's history.");
+        assertEquals(Choice.COOPERATE, action, "AlwaysBetray should always return BETRAY, regardless of opponent's history.");
     }
 
     @Test
      void testPlayWithMultipleActionsInOpponentHistory() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.BETRAY, opponent);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "AlwaysBetray should always return BETRAY, regardless of opponent's history.");
+        assertEquals(Choice.COOPERATE, action, "AlwaysBetray should always return BETRAY, regardless of opponent's history.");
     }
 }
 

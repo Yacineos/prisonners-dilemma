@@ -1,8 +1,7 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.Peacemaker;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,55 +36,55 @@ class PeacemakerTest {
     @Test
      void testPlayWithInsufficientHistory() {
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "Peacemaker should cooperate if the opponent's history is less than 2 actions.");
+        assertEquals(Choice.COOPERATE, action, "Peacemaker should cooperate if the opponent's history is less than 2 actions.");
 
-        game.playTurn(Action.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, opponent);
 
         action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "Peacemaker should still cooperate if the opponent's history has only one action.");
+        assertEquals(Choice.COOPERATE, action, "Peacemaker should still cooperate if the opponent's history has only one action.");
     }
 
     @Test
      void testPlayWhenOpponentBetrayedTwiceInARowAndPeaceTurn() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, opponent);
 
         when(mockRandom.nextInt(2)).thenReturn(1);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "Peacemaker should cooperate on a 'Peace Turn' even if opponent betrayed twice in a row.");
+        assertEquals(Choice.COOPERATE, action, "Peacemaker should cooperate on a 'Peace Turn' even if opponent betrayed twice in a row.");
     }
 
     @Test
      void testPlayWhenOpponentBetrayedTwiceInARowAndNotPeaceTurn() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
 
         when(mockRandom.nextInt(2)).thenReturn(0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "Peacemaker should betray if opponent betrayed twice in a row and it's not a 'Peace Turn'.");
+        assertEquals(Choice.BETRAY, action, "Peacemaker should betray if opponent betrayed twice in a row and it's not a 'Peace Turn'.");
     }
 
     @Test
      void testPlayWhenOpponentDidNotBetrayTwiceInARow() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.BETRAY, opponent);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "Peacemaker should cooperate if the opponent did not betray twice in a row.");
+        assertEquals(Choice.COOPERATE, action, "Peacemaker should cooperate if the opponent did not betray twice in a row.");
     }
 
     @Test
      void testPlayWithMixedOpponentActions() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, opponent);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "Peacemaker should cooperate with mixed opponent actions, as there's no two consecutive betrayals.");
+        assertEquals(Choice.COOPERATE, action, "Peacemaker should cooperate with mixed opponent actions, as there's no two consecutive betrayals.");
     }
 }

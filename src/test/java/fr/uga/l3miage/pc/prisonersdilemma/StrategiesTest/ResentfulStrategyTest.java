@@ -1,8 +1,7 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.ResentfulStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,41 +30,41 @@ class ResentfulStrategyTest {
     @Test
      void testPlayWithEmptyOpponentHistory() {
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "ResentfulStrategy should cooperate when opponent history is empty.");
+        assertEquals(Choice.COOPERATE, action, "ResentfulStrategy should cooperate when opponent history is empty.");
     }
 
     @Test
      void testPlayWhenOpponentCooperatedLast() {
-        game.playTurn(Action.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, opponent);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "ResentfulStrategy should cooperate if opponent's last action was COOPERATE.");
+        assertEquals(Choice.COOPERATE, action, "ResentfulStrategy should cooperate if opponent's last action was COOPERATE.");
     }
 
     @Test
      void testPlayWhenOpponentBetrayedLast() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "ResentfulStrategy should betray if opponent's last action was BETRAY.");
+        assertEquals(Choice.BETRAY, action, "ResentfulStrategy should betray if opponent's last action was BETRAY.");
     }
 
     @Test
      void testPlayWithMultipleActionsInOpponentHistory() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "ResentfulStrategy should betray if the opponent betrayed in the last action, regardless of previous actions.");
+        assertEquals(Choice.BETRAY, action, "ResentfulStrategy should betray if the opponent betrayed in the last action, regardless of previous actions.");
 
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.BETRAY, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.BETRAY, PlayerNumber.PLAYER_TWO);
         action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "ResentfulStrategy should reset to cooperate if opponent's latest action is COOPERATE.");
+        assertEquals(Choice.BETRAY, action, "ResentfulStrategy should reset to cooperate if opponent's latest action is COOPERATE.");
     }
 }

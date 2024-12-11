@@ -1,15 +1,14 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
-import fr.uga.l3miage.pc.prisonersdilemma.Turn;
+import contract.*;
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class TitforTwoTats implements Strategy{
+public class TitforTwoTats extends Strategy{
 
 
     private boolean startReciprocity = false ;
@@ -35,11 +34,14 @@ public class TitforTwoTats implements Strategy{
         if(last2Turns(game).size() < 2){
             return false;
         }
-        return last2Turns(game).get(0).getActionByPlayerNumber(opponent) == last2Turns(game).get(1).getActionByPlayerNumber(opponent);
+        return last2Turns(game).get(0).getChoiceByPlayerNumber(opponent) == last2Turns(game).get(1).getChoiceByPlayerNumber(opponent);
     }
 
     private Action getOpponentLastAction(Game game, PlayerNumber opponent) {
-        return game.getTurnThatJustEnded().getActionByPlayerNumber(opponent);
+        Choice choice = game.getTurnThatJustEnded().getChoiceByPlayerNumber(opponent) ;
+        Action action = Utils.convertChoiceToAction(choice);
+
+        return action;
     }
 
     private boolean isOpponentHistoryEmpty(Game game){

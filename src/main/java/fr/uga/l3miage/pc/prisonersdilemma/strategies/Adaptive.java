@@ -1,11 +1,10 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
-
-public class Adaptive implements Strategy{
+public class Adaptive extends Strategy{
     private boolean hasSequenceEnded = false;
+
     @Override
     public Action play(Game game, PlayerNumber opponent) {
         if(!hasSequenceEnded){

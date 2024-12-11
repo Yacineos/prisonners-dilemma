@@ -19,7 +19,7 @@ public class Turn {
         this.actions[playerNumber.getIndex()] = actionPlayer;
     }
 
-    public Action getActionByPlayerNumber(PlayerNumber playerNumber){
+    public Action getChoiceByPlayerNumber(PlayerNumber playerNumber){
         return this.actions[playerNumber.getIndex()];
     }
 

@@ -1,17 +1,20 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
+import contract.Choice;
+import contract.Game;
+import contract.PlayerNumber;
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
 
 import java.util.Random;
 
-public class NaivePeacemaker implements Strategy{
+public class NaivePeacemaker extends Strategy{
     private final Random random;
 
     public NaivePeacemaker(Random random) {
         this.random = random;
     }
+
     @Override
     public Action play(Game game, PlayerNumber opponent){
         if (isOpponentHistoryEmpty(game)) {
@@ -34,10 +37,13 @@ public class NaivePeacemaker implements Strategy{
     }
 
     private Action opponentLastAction(Game game, PlayerNumber opponent){
-        return game.getTurnThatJustEnded().getActionByPlayerNumber(opponent);
+        Choice choice = game.getTurnThatJustEnded().getChoiceByPlayerNumber(opponent);
+        Action res = Utils.convertChoiceToAction(choice);
+        return res;
     }
 
     private boolean isOpponentHistoryEmpty(Game game){
         return game.getTurnThatJustEnded() == null;
     }
+
 }

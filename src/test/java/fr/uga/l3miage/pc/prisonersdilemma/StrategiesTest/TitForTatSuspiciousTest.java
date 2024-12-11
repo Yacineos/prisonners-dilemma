@@ -1,8 +1,7 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.TitForTatSuspicious;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,26 +27,26 @@ class TitForTatSuspiciousTest {
     @Test
      void testPlayWithEmptyHistory() {
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "TitForTatSuspicious should cooperate on the first move.");
+        assertEquals(Choice.BETRAY, action, "TitForTatSuspicious should cooperate on the first move.");
     }
 
     @Test
      void testPlayWithOpponentLastActionCooperate() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "TitForTatSuspicious should cooperate if the opponent cooperated last.");
+        assertEquals(Choice.COOPERATE, action, "TitForTatSuspicious should cooperate if the opponent cooperated last.");
     }
 
     @Test
      void testPlayWithOpponentLastActionBetray() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "TitForTatSuspicious should betray if the opponent betrayed last.");
+        assertEquals(Choice.BETRAY, action, "TitForTatSuspicious should betray if the opponent betrayed last.");
     }
 }
 

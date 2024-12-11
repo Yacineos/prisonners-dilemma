@@ -1,12 +1,14 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
+import contract.Choice;
+import contract.Game;
+import contract.PlayerNumber;
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
 
 import java.util.Random;
 
-public class TitforTatRandom implements Strategy{
+public class TitforTatRandom extends Strategy{
 
     private final Random random;
 
@@ -43,6 +45,9 @@ public class TitforTatRandom implements Strategy{
     }
 
     private Action getOpponentLastAction(Game game, PlayerNumber opponent){
-        return game.getTurnThatJustEnded().getActionByPlayerNumber(opponent);
+        Choice choice = game.getTurnThatJustEnded().getChoiceByPlayerNumber(opponent) ;
+        Action action = Utils.convertChoiceToAction(choice);
+
+        return action;
     }
 }

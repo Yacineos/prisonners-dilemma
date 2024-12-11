@@ -88,7 +88,7 @@ public class Game {
     public List<Action> getHistoryByPlayerNumber(PlayerNumber playerNumber){
         List<Action> history = new ArrayList<>();
         for(Turn turn : getTurns()){
-            history.add(turn.getActionByPlayerNumber(playerNumber) );
+            history.add(turn.getChoiceByPlayerNumber(playerNumber) );
         }
         return history;
     }

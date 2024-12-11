@@ -1,10 +1,10 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
+import contract.*;
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
 
-public class TitForTatSuspicious implements Strategy{
+public class TitForTatSuspicious extends Strategy{
     @Override
     public Action play(Game game, PlayerNumber opponent){
         if (isOpponentHistoryEmpty(game)) {
@@ -19,6 +19,9 @@ public class TitForTatSuspicious implements Strategy{
     }
 
     private Action opponentLastAction(Game game, PlayerNumber opponent){
-        return game.getTurnThatJustEnded().getActionByPlayerNumber(opponent);
+        Choice choice = game.getTurnThatJustEnded().getChoiceByPlayerNumber(opponent) ;
+        Action action = Utils.convertChoiceToAction(choice);
+
+        return action;
     }
 }

@@ -184,7 +184,7 @@ public class GameService {
         Game game = currentGames.get(gameId);
         PlayerNumber playerNumber = getPlayerNumber(player, game);
 
-        return game.getTurns()[turn].getActionByPlayerNumber(playerNumber);
+        return game.getTurns()[turn].getChoiceByPlayerNumber(playerNumber);
     }
 
     public void sendTurnSummaryToBothPlayers(String gameId, int i) {

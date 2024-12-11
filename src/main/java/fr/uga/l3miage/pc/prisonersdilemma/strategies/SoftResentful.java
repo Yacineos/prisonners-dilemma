@@ -1,10 +1,11 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
+import contract.*;
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
 
-public class SoftResentful implements Strategy {
+
+public class SoftResentful extends Strategy {
     private int resentfulRoundCounter = 0;
 
     @Override
@@ -30,7 +31,9 @@ public class SoftResentful implements Strategy {
     }
 
     private boolean hasOpponentBetrayed(Game game, PlayerNumber opponent) {
-        return game.getTurnThatJustEnded().getActionByPlayerNumber(opponent) == Action.BETRAY;
+        Choice choice = game.getTurnThatJustEnded().getChoiceByPlayerNumber(opponent) ;
+        Action action = Utils.convertChoiceToAction(choice);
+        return  action == Action.BETRAY;
     }
 
     private boolean isResentfulActive() {

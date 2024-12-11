@@ -1,8 +1,7 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.Pavlov;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,55 +28,55 @@ class PavlovTest {
     @Test
     void testEmptyHistory(){
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action);
+        assertEquals(Choice.COOPERATE, action);
     }
 
     @Test
     void testSufficientScoreBetray(){
-        game.playTurn(Action.COOPERATE,opponent);
-        game.playTurn(Action.BETRAY, strategyPlayernumber);
+        game.playTurn(Choice.COOPERATE,opponent);
+        game.playTurn(Choice.BETRAY, strategyPlayernumber);
         Action action = strategy.play(game, opponent);
-        assertEquals( Action.BETRAY, action);
+        assertEquals( Choice.BETRAY, action);
     }
 
     @Test
     void testSufficientScoreCooperate(){
-        game.playTurn(Action.COOPERATE,opponent);
-        game.playTurn(Action.COOPERATE, strategyPlayernumber);
+        game.playTurn(Choice.COOPERATE,opponent);
+        game.playTurn(Choice.COOPERATE, strategyPlayernumber);
         Action action = strategy.play(game, opponent);
-        assertEquals( Action.COOPERATE,action);
+        assertEquals( Choice.COOPERATE,action);
     }
 
     @Test
     void testInsufficientSufficientScoreCooperate(){
-        game.playTurn(Action.BETRAY,opponent);
-        game.playTurn(Action.COOPERATE, strategyPlayernumber);
+        game.playTurn(Choice.BETRAY,opponent);
+        game.playTurn(Choice.COOPERATE, strategyPlayernumber);
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action);
+        assertEquals(Choice.COOPERATE, action);
     }
 
     @Test
     void testInsufficientSufficientScoreBetray(){
-        game.playTurn(Action.BETRAY,opponent);
-        game.playTurn(Action.BETRAY, strategyPlayernumber);
+        game.playTurn(Choice.BETRAY,opponent);
+        game.playTurn(Choice.BETRAY, strategyPlayernumber);
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action);
+        assertEquals(Choice.COOPERATE, action);
     }
 
 
     @Test
     void testMultipleInstances(){
-        game.playTurn(Action.COOPERATE,opponent);
-        game.playTurn(Action.COOPERATE, strategyPlayernumber);
+        game.playTurn(Choice.COOPERATE,opponent);
+        game.playTurn(Choice.COOPERATE, strategyPlayernumber);
         Action action = strategy.play(game, opponent);
-        assertEquals( Action.COOPERATE,action);
-        game.playTurn(Action.COOPERATE,opponent);
-        game.playTurn(Action.BETRAY, strategyPlayernumber);
+        assertEquals( Choice.COOPERATE,action);
+        game.playTurn(Choice.COOPERATE,opponent);
+        game.playTurn(Choice.BETRAY, strategyPlayernumber);
         Action actionTurn1 = strategy.play(game, opponent);
-        assertEquals( Action.BETRAY,actionTurn1);
-        game.playTurn(Action.BETRAY,opponent);
-        game.playTurn(Action.BETRAY, strategyPlayernumber);
+        assertEquals( Choice.BETRAY,actionTurn1);
+        game.playTurn(Choice.BETRAY,opponent);
+        game.playTurn(Choice.BETRAY, strategyPlayernumber);
         Action actionTurn2 = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, actionTurn2);
+        assertEquals(Choice.COOPERATE, actionTurn2);
     }
 }

@@ -1,7 +1,6 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.TitforTatRandom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,32 +35,32 @@ class TitforTatRandomTest {
     @Test
      void testPlayWithEmptyHistory() {
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "TitforTatRandom should cooperate on the first move.");
+        assertEquals(Choice.COOPERATE, action, "TitforTatRandom should cooperate on the first move.");
     }
 
     @Test
      void testPlayWithRandomAction() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
 
         when(mockRandom.nextInt(2)).thenReturn(1);
         when(mockRandom.nextInt(2)).thenReturn(1);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "TitforTatRandom should randomly choose to cooperate.");
+        assertEquals(Choice.COOPERATE, action, "TitforTatRandom should randomly choose to cooperate.");
     }
 
     @Test
      void testPlayWithTitForTatBehavior() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.BETRAY, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, PlayerNumber.PLAYER_TWO);
 
 
         when(mockRandom.nextInt(2)).thenReturn(0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "TitforTatRandom should mimic the opponent's last action (Tit for Tat).");
+        assertEquals(Choice.BETRAY, action, "TitforTatRandom should mimic the opponent's last action (Tit for Tat).");
     }
 }
 

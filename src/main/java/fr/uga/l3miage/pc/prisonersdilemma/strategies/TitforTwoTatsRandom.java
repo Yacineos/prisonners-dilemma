@@ -1,16 +1,15 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
-import fr.uga.l3miage.pc.prisonersdilemma.Turn;
+import contract.*;
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-public class TitforTwoTatsRandom implements Strategy{
+public class TitforTwoTatsRandom extends Strategy{
     private final Random random;
     private boolean startReciprocity = false;
 
@@ -53,7 +52,7 @@ public class TitforTwoTatsRandom implements Strategy{
         if(last2Turns(game).size() < 2){
             return false;
         }
-        return last2Turns(game).get(0).getActionByPlayerNumber(opponent) == last2Turns(game).get(1).getActionByPlayerNumber(opponent);
+        return last2Turns(game).get(0).getChoiceByPlayerNumber(opponent) == last2Turns(game).get(1).getChoiceByPlayerNumber(opponent);
     }
 
     private List<Turn> last2Turns(Game game){
@@ -79,6 +78,8 @@ public class TitforTwoTatsRandom implements Strategy{
     }
 
     private Action getOpponentLastAction(Game game, PlayerNumber opponent){
-        return game.getTurnThatJustEnded().getActionByPlayerNumber(opponent);
-    }
+        Choice choice = game.getTurnThatJustEnded().getChoiceByPlayerNumber(opponent) ;
+        Action action = Utils.convertChoiceToAction(choice);
+
+        return action;}
 }

@@ -1,10 +1,11 @@
 package fr.uga.l3miage.pc.prisonersdilemma.strategies;
 
+import contract.*;
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
 
-public class ResentfulStrategy implements Strategy{
+
+public class ResentfulStrategy extends Strategy{
 
     private boolean hasBetrayed = false;
     @Override
@@ -25,7 +26,9 @@ public class ResentfulStrategy implements Strategy{
 
     private boolean hasOpponentBetrayed(Game game, PlayerNumber opponent){
         if (!hasBetrayed) {
-            this.hasBetrayed = game.getTurnThatJustEnded().getActionByPlayerNumber(opponent) == Action.BETRAY;
+            Choice choice = game.getTurnThatJustEnded().getChoiceByPlayerNumber(opponent);
+            Action action = Utils.convertChoiceToAction(choice);
+            this.hasBetrayed = action == Action.BETRAY;
         }
         return hasBetrayed;
     }

@@ -1,8 +1,8 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 
+import fr.uga.l3miage.pc.prisonersdilemma.Utils;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.GradualStrategy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,113 +27,170 @@ class GradualStrategyTest {
     @Test
      void testPlayWithEmptyHistory() {
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "TitforTat should cooperate on the first move.");
+        assertEquals(Choice.COOPERATE, action, "TitforTat should cooperate on the first move.");
     }
 
     @Test
      void testPlayWithOpponentLastActionCooperate() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        Action action1 =strategy.play(game, opponent);
+        Choice choice = Utils.convertActionToChoice(action1);
+        game.playTurn(choice, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "TitforTat should cooperate if the opponent cooperated last.");
+        assertEquals(Choice.COOPERATE, action, "TitforTat should cooperate if the opponent cooperated last.");
     }
 
     @Test
      void testPlayWithOpponentLastActionBetray() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        Action action1 =strategy.play(game, opponent);
+        Choice choice = Utils.convertActionToChoice(action1);
+        game.playTurn(choice, PlayerNumber.PLAYER_TWO);
 
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "GradualStrategy should betray if the opponent betrayed last.");
+        assertEquals(Choice.COOPERATE, action, "GradualStrategy should betray if the opponent betrayed last.");
     }
 
     @Test
      void testPlayWithOpponentLastActionTwoTimesInARow() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        Action action1 =strategy.play(game, opponent);
+        Choice choice = Utils.convertActionToChoice(action1);
+        game.playTurn(choice, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        Action action2 =strategy.play(game, opponent);
+        Choice choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "GradualStrategy should betray if the opponent betrayed last.");
+        assertEquals(Choice.COOPERATE, action, "GradualStrategy should betray if the opponent betrayed last.");
     }
 
     @Test
      void testPlayWithOpponentLastActionThreeTimesInARow() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        Action action1 = strategy.play(game, opponent);
+        Choice choice = Utils.convertActionToChoice(action1);
+        game.playTurn(choice, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        Action action2 = strategy.play(game, opponent);
+        Choice choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        Action action3 = strategy.play(game, opponent);
+        Choice choice3 = Utils.convertActionToChoice(action3);
+        game.playTurn(choice3, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "GradualStrategy should betray if the opponent betrayed last.");
+        assertEquals(Choice.BETRAY, action, "GradualStrategy should betray if the opponent betrayed last.");
     }
 
     @Test
      void testPlayWithOpponentLastActionThreeTimesInARowAndCooperatedLast() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        Action action2 = strategy.play(game, opponent);
+        Choice choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "GradualStrategy should betray if the opponent betrayed last.");
+        assertEquals(Choice.BETRAY, action, "GradualStrategy should betray if the opponent betrayed last.");
     }
 
     @Test
      void testPlayWithOpponentLastActionThreeTimesInARowAndCooperated2Last() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+
+        Action action2 = strategy.play(game, opponent);
+        Choice choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "GradualStrategy should betray if the opponent betrayed last.");
+        assertEquals(Choice.COOPERATE, action, "GradualStrategy should betray if the opponent betrayed last.");
     }
 
     @Test
      void testPlayWithOpponentMixedTurns() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        Action action2 = strategy.play(game, opponent);
+        Choice choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "GradualStrategy should betray if the opponent betrayed last.");
+        assertEquals(Choice.BETRAY, action, "GradualStrategy should betray if the opponent betrayed last.");
     }
     @Test
      void testPlayWithOpponentAlternatingPattern() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(strategy.play(game, opponent), PlayerNumber.PLAYER_TWO);
+
+        game.playTurn(Choice.BETRAY, opponent);
+        Action action2 = strategy.play(game, opponent);
+        Choice choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        action2 = strategy.play(game, opponent);
+        choice2 = Utils.convertActionToChoice(action2);
+        game.playTurn(choice2, PlayerNumber.PLAYER_TWO);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "GradualStrategy should betray after opponent's mixed pattern.");
+        assertEquals(Choice.BETRAY, action, "GradualStrategy should betray after opponent's mixed pattern.");
     }
 
 

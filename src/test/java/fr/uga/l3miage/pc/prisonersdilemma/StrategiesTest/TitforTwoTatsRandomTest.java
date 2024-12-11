@@ -1,7 +1,6 @@
 package fr.uga.l3miage.pc.prisonersdilemma.StrategiesTest;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
-import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
-import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
+import contract.*;
 import fr.uga.l3miage.pc.prisonersdilemma.strategies.TitforTwoTatsRandom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,103 +32,103 @@ class TitforTwoTatsRandomTest {
     @Test
      void testPlayWithInsufficientHistory() {
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "TitforTwoTats should cooperate if the opponent's history is less than 2 actions.");
+        assertEquals(Choice.COOPERATE, action, "TitforTwoTats should cooperate if the opponent's history is less than 2 actions.");
 
-        game.playTurn(Action.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, opponent);
         action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "TitforTwoTats should still cooperate if the opponent's history has only one action.");
+        assertEquals(Choice.COOPERATE, action, "TitforTwoTats should still cooperate if the opponent's history has only one action.");
     }
 
     @Test
      void testPlayWithTwoIdenticalLastActionsAndNonRandom() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.BETRAY, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, PlayerNumber.PLAYER_TWO);
 
         when(mockRandom.nextInt(2)).thenReturn(0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "TitforTwoTats should mimic the last action if the opponent's last two actions are the same and isNextActionRandom is false.");
+        assertEquals(Choice.BETRAY, action, "TitforTwoTats should mimic the last action if the opponent's last two actions are the same and isNextActionRandom is false.");
     }
 
     @Test
      void testPlayWithTwoIdenticalLastActionsAndRandom() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
         when(mockRandom.nextInt(2)).thenReturn(1,0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "TitforTwoTats should play BETRAY as a random action if isNextActionRandom is true.");
+        assertEquals(Choice.BETRAY, action, "TitforTwoTats should play BETRAY as a random action if isNextActionRandom is true.");
     }
     @Test
      void testPlayWhenOpponentHasMixedLastActions() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.BETRAY, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, PlayerNumber.PLAYER_TWO);
 
         when(mockRandom.nextInt(2)).thenReturn(0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "TitforTwoTats should BETRAY when opponent's last two actions are mixed and reciprocity starts.");
+        assertEquals(Choice.BETRAY, action, "TitforTwoTats should BETRAY when opponent's last two actions are mixed and reciprocity starts.");
     }
 
     @Test
      void testPlayWithStartReciprocityAndNonRandom() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.BETRAY, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, PlayerNumber.PLAYER_TWO);
 
         when(mockRandom.nextInt(2)).thenReturn(0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "TitforTwoTats should mimic the opponent's last action when startReciprocity is true and isNextActionRandom is false.");
+        assertEquals(Choice.BETRAY, action, "TitforTwoTats should mimic the opponent's last action when startReciprocity is true and isNextActionRandom is false.");
     }
 
     @Test
      void testPlayWithStartReciprocityAndRandom() {
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.BETRAY, opponent);
-        game.playTurn(Action.BETRAY, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.BETRAY, opponent);
+        game.playTurn(Choice.BETRAY, PlayerNumber.PLAYER_TWO);
 
         when(mockRandom.nextInt(2)).thenReturn(1, 0);
 
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.BETRAY, action, "TitforTwoTats should BETRAY as a random action even if startReciprocity is true.");
+        assertEquals(Choice.BETRAY, action, "TitforTwoTats should BETRAY as a random action even if startReciprocity is true.");
     }
 
     @Test
      void testPlayWithRandomBehavior() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
         when(mockRandom.nextInt(2)).thenReturn(1);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "TitforTwoTats should COOPERATE as a random action.");
+        assertEquals(Choice.COOPERATE, action, "TitforTwoTats should COOPERATE as a random action.");
     }
 
     @Test
      void testPlayWithOpponentCooperatingTwice() {
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
-        game.playTurn(Action.COOPERATE, opponent);
-        game.playTurn(Action.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
+        game.playTurn(Choice.COOPERATE, opponent);
+        game.playTurn(Choice.COOPERATE, PlayerNumber.PLAYER_TWO);
 
         when(mockRandom.nextInt(2)).thenReturn(0);
 
         Action action = strategy.play(game, opponent);
-        assertEquals(Action.COOPERATE, action, "TitforTwoTats should mimic COOPERATE when opponent cooperates twice and isNextActionRandom is false.");
+        assertEquals(Choice.COOPERATE, action, "TitforTwoTats should mimic COOPERATE when opponent cooperates twice and isNextActionRandom is false.");
     }
 }
 
