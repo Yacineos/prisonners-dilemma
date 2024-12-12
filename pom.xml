@@ -23,6 +23,13 @@
 
     <dependencies>
         <dependency>
+            <groupId>fr.uga.miage.m1</groupId>
+            <artifactId>strategie-contract</artifactId>
+            <version>1.0.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/strategie.jar</systemPath>
+        </dependency>
+        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
