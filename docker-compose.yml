@@ -5,6 +5,11 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
+    volumes:
+      - ./src:/app/src
+      - ./target:/app/target
+      - ./pom.xml:/app/pom.xml
+    command: mvn spring-boot:run
     networks:
         - shared-network
 
@@ -14,6 +19,10 @@ services:
       dockerfile: Dockerfile
     ports:
       - ":3000"
+    volumes:
+      - ./front-end:/app
+      - /app/node_modules
+    command: npm run dev
     depends_on:
       - backend
     networks:

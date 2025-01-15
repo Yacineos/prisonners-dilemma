@@ -1,10 +1,22 @@
+// SingletonGameWebSocket.ts
 import {server_url} from "../models/Server";
 import {GameWebSocketsGateway} from "./GameWebSocketsGateway";
 
-// Singleton instance
-const gateway = new GameWebSocketsGateway(server_url);
+class SingletonGameWebSocket extends GameWebSocketsGateway {
+  private static instance: SingletonGameWebSocket;
 
-// Connect immediately
-gateway.connect();
+  private constructor() {
+    super(server_url);
+  }
 
+  public static getInstance(): SingletonGameWebSocket {
+    if (!SingletonGameWebSocket.instance) {
+      SingletonGameWebSocket.instance = new SingletonGameWebSocket();
+      SingletonGameWebSocket.instance.connect();
+    }
+    return SingletonGameWebSocket.instance;
+  }
+}
+
+const gateway = SingletonGameWebSocket.getInstance();
 export default gateway;

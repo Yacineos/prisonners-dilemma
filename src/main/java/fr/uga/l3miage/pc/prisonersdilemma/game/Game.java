@@ -41,6 +41,9 @@ public class Game {
         this.soloGame = true;
     }
 
+    public boolean isGameFinished(){
+        return this.currentTurn == this.maxTurns;
+    }
     public void changeState(State state){
         this.state = state;
     }
@@ -84,8 +87,10 @@ public class Game {
     }
 
     public boolean atLeastOnePlayerHasPlayedHisTurn(){
+        if(isGameFinished()){
+            throw new IllegalStateException("Game is finished");
+        }
         return this.turns[this.currentTurn].getPlayerTwoAction() != Action.NONE || this.turns[this.currentTurn].getPlayerOneAction() != Action.NONE;
-
     }
 
     public boolean bothPlayerTwoHavePlayedLastTurn(){

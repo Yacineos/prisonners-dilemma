@@ -16,6 +16,7 @@ import org.springframework.web.socket.WebSocketSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -339,19 +340,98 @@ class GameServiceTest {
 
 	@Test
 	void testGetGameByPlayerSessionError(){
-	WebSocketSession mockSession2 = mock(WebSocketSession.class);
+		WebSocketSession mockSession2 = mock(WebSocketSession.class);
 
-	NoSuchElementException exception = assertThrows(
-			NoSuchElementException.class,
-			() -> gameService.getGameByPlayerSession(mockSession2),
-			"Expected getGameByPlayerSession to throw, but it didn't"
-	);
+		NoSuchElementException exception = assertThrows(
+				NoSuchElementException.class,
+				() -> gameService.getGameByPlayerSession(mockSession2),
+				"Expected getGameByPlayerSession to throw, but it didn't"
+		);
 
-	assertEquals("No game found for the given player session", exception.getMessage());
-}
+		assertEquals("No game found for the given player session", exception.getMessage());
+	}
 
+	@Test
+	void sendGameEndNotification_ShouldSendCorrectScores() throws IOException {
+		// Create a game with 2 turns
+		String gameId = gameService.createGame(mockSession, "CREATE_GAME:2");
+		WebSocketSession mockSessionTwo = mock(WebSocketSession.class);
+		gameService.joinGame(mockSessionTwo, "JOIN_GAME:" + gameId);
 
+		// Mock message captures
+		ArgumentCaptor<TextMessage> messageCaptor = ArgumentCaptor.forClass(TextMessage.class);
 
+		// Simulate a full game where both players cooperate
+		gameService.action(mockSession, "ACTION:" + gameId + ":COOPERATE");
+		gameService.action(mockSessionTwo, "ACTION:" + gameId + ":COOPERATE");
+		gameService.action(mockSession, "ACTION:" + gameId + ":COOPERATE");
+		gameService.action(mockSessionTwo, "ACTION:" + gameId + ":COOPERATE");
 
+		// Verify that messages were sent to both players
+		verify(mockSession, atLeastOnce()).sendMessage(messageCaptor.capture());
+		verify(mockSessionTwo, atLeastOnce()).sendMessage(any(TextMessage.class));
+
+		// Get all messages sent to player one
+		List<TextMessage> sentMessages = messageCaptor.getAllValues();
+		Optional<String> gameEndMessage = sentMessages.stream()
+				.map(TextMessage::getPayload)
+				.filter(msg -> msg.startsWith("GAME_END:"))
+				.findFirst();
+
+		assertTrue(gameEndMessage.isPresent(), "Game end message should be sent");
+		assertEquals("GAME_END:6:6", gameEndMessage.get(),
+				"Both players should have 6 points (3 points per cooperative round)");
+	}
+
+	@Test
+	void gameEndNotification_ShouldCalculateCorrectScoresForMixedPlay() throws IOException {
+		// Create a game with 2 turns
+		String gameId = gameService.createGame(mockSession, "CREATE_GAME:2");
+		WebSocketSession mockSessionTwo = mock(WebSocketSession.class);
+		gameService.joinGame(mockSessionTwo, "JOIN_GAME:" + gameId);
+
+		// First turn: Player 1 cooperates, Player 2 betrays
+		gameService.action(mockSession, "ACTION:" + gameId + ":COOPERATE");
+		gameService.action(mockSessionTwo, "ACTION:" + gameId + ":BETRAY");
+
+		// Second turn: Both cooperate
+		gameService.action(mockSession, "ACTION:" + gameId + ":COOPERATE");
+		gameService.action(mockSessionTwo, "ACTION:" + gameId + ":COOPERATE");
+
+		// Capture messages
+		ArgumentCaptor<TextMessage> messageCaptor = ArgumentCaptor.forClass(TextMessage.class);
+		verify(mockSession, atLeastOnce()).sendMessage(messageCaptor.capture());
+
+		// Get all messages sent to player one
+		List<TextMessage> sentMessages = messageCaptor.getAllValues();
+		Optional<String> gameEndMessage = sentMessages.stream()
+				.map(TextMessage::getPayload)
+				.filter(msg -> msg.startsWith("GAME_END:"))
+				.findFirst();
+
+		assertTrue(gameEndMessage.isPresent(), "Game end message should be sent");
+		assertEquals("GAME_END:3:8", gameEndMessage.get(),
+				"Player 1 should have 3 points (0 + 3), Player 2 should have 8 points (5 + 3)");
+	}
+
+	@Test
+	void sendGameEndNotification_ShouldHandleIOException() throws IOException {
+		// Create a game with 1 turn
+		String gameId = gameService.createGame(mockSession, "CREATE_GAME:1");
+		WebSocketSession mockSessionTwo = mock(WebSocketSession.class);
+		gameService.joinGame(mockSessionTwo, "JOIN_GAME:" + gameId);
+
+		// Mock IOException when sending message
+		doThrow(new IOException()).when(mockSession).sendMessage(any(TextMessage.class));
+
+		// Play the game
+		assertDoesNotThrow(() -> {
+			gameService.action(mockSession, "ACTION:" + gameId + ":COOPERATE");
+			gameService.action(mockSessionTwo, "ACTION:" + gameId + ":COOPERATE");
+		});
+
+		// Verify that at least one attempt was made to send a message
+		verify(mockSession, atLeastOnce()).sendMessage(any(TextMessage.class));
+	}
 
 }

@@ -4,8 +4,8 @@ export enum Action {
 } 
 
 export type TurnSummary = {
-    playerOneAction: Action,
-    playerTwoAction: Action,
+    playerOneAction: Action | null,
+    playerTwoAction: Action | null,
 }
 
 export const createGameStartingConvention = "CREATE_GAME";

@@ -1,5 +1,6 @@
 package fr.uga.l3miage.pc.prisonersdilemma.services;
 
+import fr.uga.l3miage.pc.prisonersdilemma.Score;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.Action;
 import fr.uga.l3miage.pc.prisonersdilemma.enums.PlayerNumber;
 import fr.uga.l3miage.pc.prisonersdilemma.game.Game;
@@ -8,10 +9,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.io.IOException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 @Slf4j
 public class GameService {
@@ -87,7 +85,6 @@ public class GameService {
         WebSocketSession playerOne = currentGames.get(gameId).getPlayerOne();
 
         informPlayerOneThatPlayerTwoJoined(playerOne);
-
     }
 
     private static void informPlayerOneThatPlayerTwoJoined(WebSocketSession player) throws IOException {
@@ -145,8 +142,6 @@ public class GameService {
         if(!leftGame.isSoloGame()){
             leftGame.updateSoloGame(true);
         }
-
-
     }
 
 
@@ -194,8 +189,9 @@ public class GameService {
         PlayerNumber playerNumber = getPlayerNumber(player, game);
 
         game.play(action, playerNumber);
-
-        if(game.bothPlayerTwoHavePlayedLastTurn() && !game.atLeastOnePlayerHasPlayedHisTurn()){
+        if (game.isGameFinished()) {
+            sendGameEndNotification(gameId);
+        } else if(game.bothPlayerTwoHavePlayedLastTurn() && !game.atLeastOnePlayerHasPlayedHisTurn()){
             sendTurnSummaryToBothPlayers(gameId, game.getCurrentTurn() - 1);
         }
     }
@@ -232,6 +228,30 @@ public class GameService {
         players.forEach(player -> {
             try {
                 player.sendMessage(new TextMessage("TURN_SUMMARY:" + playerOneAction + ":" + playerTwoAction));
+            } catch (IOException e) {
+                log.debug(String.valueOf(e));
+            }
+        });
+    }
+
+    // In GameService.java
+    public void sendGameEndNotification(String gameId) {
+        Game game = currentGames.get(gameId);
+        Set<WebSocketSession> players = getPlayers(gameId);
+
+        // Get final scores
+        List<Score> allScores = game.getAllScoresUntilCurrentTurn();
+        int finalScorePlayerOne = allScores.stream()
+                .mapToInt(Score::getScorePlayerOne)
+                .sum();
+        int finalScorePlayerTwo = allScores.stream()
+                .mapToInt(Score::getScorePlayerTwo)
+                .sum();
+
+        // Send game end notification with final scores
+        players.forEach(player -> {
+            try {
+                player.sendMessage(new TextMessage("GAME_END:" + finalScorePlayerOne + ":" + finalScorePlayerTwo));
             } catch (IOException e) {
                 log.debug(String.valueOf(e));
             }
