@@ -1,1 +1,1 @@
-export const server_url = "ws://127.0.0.1:8080/ws"
+export const server_url = "ws://15.188.209.4:8080/ws"
